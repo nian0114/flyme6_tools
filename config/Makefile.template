@@ -7,21 +7,21 @@
 # The default value is base.
 # Support values: base, base_cm, base_mt6592 and other devices in the future.
 #-----------------------------------------------------------------------------
-#BASE := base_cm
+BASE := base_cm
 
 ##############################################################################
 # The value is used for resource adapter with the aapt tool.
 # It depends on the device's resolution.
 # The default value is hdpi.
 #-----------------------------------------------------------------------------
-DENSITY := xhdpi
+DENSITY := xxhdpi
 
 ##############################################################################
 # The value is used to config the bootanimation.
 # It depends on the device's resolution, such as 480x854, 540x960, 720x1280, 1080x1920.
 # The default value is nothing.
 #-----------------------------------------------------------------------------
-RESOLUTION :=
+RESOLUTION := 1080x1920
 
 ##############################################################################
 # The value decides whether use prebuilt image or pack from the BOOT or RECOVERY directory in the vendor directory.
@@ -54,7 +54,10 @@ vendor_modify_images := boot
 # The default value is Bluetooth.
 # You can configure the apk name in the vendor/system/app or vendor/system/priv-app directory.
 #-----------------------------------------------------------------------------
-vendor_saved_apps := BackupRestoreConfirmation Bluetooth DefaultContainerService ExternalStorageProvider FusedLocation HTMLViewer InputDevices KeyChain PicoTts PrintSpooler ProxyHandler SharedStorageBackup Shell UserDictionaryProvider
+vendor_saved_apps := AntHalService  Bluetooth BluetoothExt BackupRestoreConfirmation Camera2 \
+ExternalStorageProvider FusedLocation HTMLViewer InputDevices KeyChain NfcNci ProxyHandler \
+qcrilmsgtunnel QuickBoot shutdownlistener TimeService SharedStorageBackup Shell Stk Tag \
+UserDictionaryProvider WAPPushManager
 
 ##############################################################################
 # The value decides which vendor apk you want to modify.
@@ -72,7 +75,7 @@ vendor_saved_apps := BackupRestoreConfirmation Bluetooth DefaultContainerService
 # You need to decode android.policy.jar to the project directory (use apktool d android.policy.jar) first,
 # and then you can make it by:   make android.policy
 #-----------------------------------------------------------------------------
-vendor_modify_jars := framework services telephony-common wifi-service
+vendor_modify_jars := framework services telephony-common wifi-service org.cyanogenmod.platform
 
 ##############################################################################
 # The value decides which board system directory you want to save.
@@ -139,7 +142,8 @@ vendor_modify_jars := framework services telephony-common wifi-service
 # You should configure the property according to your device and your ID with replace the "Nexus-6P_Unofficial".
 override_property += \
     ro.flyme.romer=Unofficial \
-    ro.product.model_romer=Nexus-6P_Unofficial
+    ro.product.model_romer=Nexus-6P_Unofficial \
+    ro.product.mod_device=Unknown
 
 ##############################################################################
 # The value decides which property you will remove from the build.prop.
@@ -175,7 +179,7 @@ override_property += \
 # Will fall back to a file-based OTA if the target_files is older and doesn't support block-based OTAs.
 # Default: true
 #-----------------------------------------------------------------------------
-#PRODUCE_BLOCK_BASED_OTA := false
+PRODUCE_BLOCK_BASED_OTA := false
 
 ##############################################################################
 # Defines whether build an international version of package.
