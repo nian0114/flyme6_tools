@@ -27,8 +27,10 @@ PRJ_GIT_IGNORE=$WORK_DIR/.gitignore
 
 FROM_OTA=0
 FROM_DAT=0
+FROM_TRAGET_FILES=0
 OTA_PACKAGE=$WORK_DIR/ota.zip
 ROM_PACKAGE=$WORK_DIR/rom.zip
+TARGET_PACKAGE=$WORK_DIR/target_files.zip
 DAT_PACKAGE=$WORK_DIR/system.new.dat
 OUT=$WORK_DIR/out
 OUT_OTA_DIR=$OUT/ota
@@ -164,6 +166,12 @@ function checkEnvironment()
 		echo ">>> Config Makefile from $ROM_PACKAGE."
 		FROM_DAT=1
 	fi
+
+	if [ -f $TARGET_PACKAGE ];then
+		echo ">>> Device is not online, but target_files is exist."
+		echo ">>> Config Makefile from $ROM_PACKAGE."
+		FROM_TRAGET_FILES=1
+	fi
 }
 
 function checkDATPackage()
@@ -183,6 +191,15 @@ function checkDATPackage()
 	if [ -f $OUT_OTA_DIR/recovery.img ];then
 		cp $OUT_OTA_DIR/recovery.img $WORK_DIR/recovery.img
 	fi
+}
+
+
+function checkTargetPackage()
+{
+	echo ">>> Unzip $ROM_PACKAGE ..."
+	unzip -q -o $TARGET_PACKAGE BOOTABLE_IMAGES/* -d $WORK_DIR/
+	mv $WORK_DIR/BOOTABLE_IMAGES/* $WORK_DIR/
+	rm -rf $WORK_DIR/BOOTABLE_IMAGES
 }
 
 function checkOTAPackage()
@@ -385,41 +402,46 @@ function setupMakefile()
 
 	cp $TEMPLATE_MAKEFILE $NEW_MAKEFILE
 
-	getVendorModifyJars
-	if [ $? == "0" ] && [ "x$vendor_modify_jars" != "x" ]; then
-		echo ">>> Set vendor_modify_jars: $vendor_modify_jars"
-		sed -i "s/^[ \t]*vendor_modify_jars[ \t]*\:.*/vendor_modify_jars \:\= $vendor_modify_jars/g" $NEW_MAKEFILE
-	else
-		echo ">>> Get the files list in /system/framework failed! "
-		echo ">>> Please check the adb is ok! "
-		exit $ERR_MISSION_FAILED
-	fi
+    if [ $FROM_TRAGET_FILES==0 ]; then
 
-	getDensity
-	if [ "x$DENSITY" != "x" ]; then
-		echo ">>> Set DENSITY: $DENSITY"
-		sed -i "s/^[ \t]*DENSITY[ \t]*\:.*/DENSITY \:\= $DENSITY/g" $NEW_MAKEFILE
-	fi
+        getVendorModifyJars
+        if [ $? == "0" ] && [ "x$vendor_modify_jars" != "x" ]; then
+            echo ">>> Set vendor_modify_jars: $vendor_modify_jars"
+            sed -i "s/^[ \t]*vendor_modify_jars[ \t]*\:.*/vendor_modify_jars \:\= $vendor_modify_jars/g" $NEW_MAKEFILE
+        else
+            echo ">>> Get the files list in /system/framework failed! "
+            echo ">>> Please check the adb is ok! "
+            exit $ERR_MISSION_FAILED
+        fi
 
-	getResolution
-	if [ "x$RESOLUTION" != "x" ];then
-		echo ">>> Set RESOLUTION: $RESOLUTION"
-		sed -i "s/^[ \t]*RESOLUTION[ \t]*\:.*/RESOLUTION \:\= $RESOLUTION/g" $NEW_MAKEFILE
-	fi
+        getDensity
+        if [ "x$DENSITY" != "x" ]; then
+            echo ">>> Set DENSITY: $DENSITY"
+            sed -i "s/^[ \t]*DENSITY[ \t]*\:.*/DENSITY \:\= $DENSITY/g" $NEW_MAKEFILE
+        fi
 
-	getvendorSavedApps
-	if [ "x$vendor_saved_apps" != "x" ]; then
-		echo ">>> Set vendor_saved_apps: $vendor_saved_apps"
-		sed -i "s/^[ \t]*vendor_saved_apps[ \t]*\:.*/vendor_saved_apps \:\= $vendor_saved_apps/g" $NEW_MAKEFILE
-	fi
+        getResolution
+        if [ "x$RESOLUTION" != "x" ];then
+            echo ">>> Set RESOLUTION: $RESOLUTION"
+            sed -i "s/^[ \t]*RESOLUTION[ \t]*\:.*/RESOLUTION \:\= $RESOLUTION/g" $NEW_MAKEFILE
+        fi
 
-	echo "===================================================="
-	echo "Makefile Configuration:"
-	echo "    vendor_modify_jars := $vendor_modify_jars"
-	echo "    vendor_saved_apps  := $vendor_saved_apps"
-	echo "    DENSITY            := $DENSITY"
-	echo "    RESOLUTION         := $RESOLUTION"
-	echo "===================================================="
+        getvendorSavedApps
+        if [ "x$vendor_saved_apps" != "x" ]; then
+            echo ">>> Set vendor_saved_apps: $vendor_saved_apps"
+            sed -i "s/^[ \t]*vendor_saved_apps[ \t]*\:.*/vendor_saved_apps \:\= $vendor_saved_apps/g" $NEW_MAKEFILE
+        fi
+
+        echo "===================================================="
+        echo "Makefile Configuration:"
+        echo "    vendor_modify_jars := $vendor_modify_jars"
+        echo "    vendor_saved_apps  := $vendor_saved_apps"
+        echo "    DENSITY            := $DENSITY"
+        echo "    RESOLUTION         := $RESOLUTION"
+        echo "===================================================="
+
+    fi
+
 
 	echo ">>> Setup the Makefile Done!"
 }
@@ -482,11 +504,19 @@ function newMakefileFromDAT()
 	umountDATPackage
 }
 
+function newMakefileFromTargetFiles(){
+	checkTargetPackage
+	setupMakefile
+	initGitIgnore
+}
+
 checkEnvironment
 if [ $FROM_OTA == 1 ];then
 	newMakefileFromOTA
 elif [ $FROM_DAT == 1 ];then
 	newMakefileFromDAT
+elif [ $FROM_TRAGET_FILES == 1 ];then
+	newMakefileFromTargetFiles
 else
 	newMakefile
 fi
