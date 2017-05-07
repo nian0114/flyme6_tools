@@ -54,10 +54,7 @@ vendor_modify_images := boot
 # The default value is Bluetooth.
 # You can configure the apk name in the vendor/system/app or vendor/system/priv-app directory.
 #-----------------------------------------------------------------------------
-vendor_saved_apps := AntHalService  Bluetooth BluetoothExt BackupRestoreConfirmation Camera2 \
-ExternalStorageProvider FusedLocation HTMLViewer InputDevices KeyChain NfcNci ProxyHandler \
-qcrilmsgtunnel QuickBoot shutdownlistener TimeService SharedStorageBackup Shell Stk Tag \
-UserDictionaryProvider WAPPushManager
+include phoneapps.mk
 
 ##############################################################################
 # The value decides which vendor apk you want to modify.
@@ -89,7 +86,7 @@ vendor_modify_jars := framework services telephony-common wifi-service org.cyano
 # The default value is nothing.
 # You can configure the board system file path which relative to the system directory in the board release.
 #-----------------------------------------------------------------------------
-#board_saved_files :=
+board_saved_files :=
 
 ##############################################################################
 # The value decides which board system apk you want to remove.

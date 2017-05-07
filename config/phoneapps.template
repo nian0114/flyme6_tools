@@ -1,0 +1,44 @@
+vendor_saved_apps := \
+AntHalService \
+AudioFX \
+BackupRestoreConfirmation \
+Bluetooth \
+BluetoothExt \
+BluetoothMidiService \
+CellBroadcastReceiver \
+CMSettingsProvider \
+CNEService \
+com.qualcomm.location \
+ConfigPanel \
+datastatusnotification \
+DATA_TP_UEIAndroidServiceSDK \
+DefaultContainerService \
+dpmserviceapp \
+ExternalStorageProvider \
+embms \
+fastdormancy \
+FusedLocation \
+InputDevices \
+NeoVision6 \
+KeyChain \
+telresources \
+SharedStorageBackup \
+HTMLViewer \
+nubia_IRControl3 \
+QtiTelephonyService \
+OneTimeInitializer \
+PacProcessor \
+PicoTts \
+PrintSpooler \
+ProxyHandler \
+qcrilmsgtunnel \
+QtiTetherService \
+SharedStorageBackup\
+Shell \
+shutdownlistener \
+StatementService \
+Stk \
+ThemesProvider \
+TimeService \
+UserDictionaryProvider \
+WAPPushManager

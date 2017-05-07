@@ -12,11 +12,13 @@ TAG="makeconfig"
 
 WORK_DIR=$PWD
 NEW_MAKEFILE=$WORK_DIR/Makefile
+NEW_PHONEAPPS=$WORK_DIR/phoneapps.mk
 
 DAT_PACKING_TOOL=$PORT_ROOT/build/tools/releasetools/sdat2img.py
 MAKECONFIG_ROOT=$PORT_ROOT/tools/config
 DENSITY_CFG=$MAKECONFIG_ROOT/density.cfg
 TEMPLATE_MAKEFILE=$MAKECONFIG_ROOT/Makefile.template
+TEMPLATE_PHONEAPPS=$MAKECONFIG_ROOT/phoneapps.template
 VENDOR_MODIFY_JARS_SUGGEST="framework|services|telephony-common|wifi-service|android.policy"
 VENDOR_SAVED_APPS_SUGGEST="MtkBt|FMTransmitter|FMRadio|Bluetooth|FmRadio|.*Stk.*|Nfc"
 
@@ -401,6 +403,7 @@ function setupMakefile()
 	echo ">>> Setup the Makefile Begin!"
 
 	cp $TEMPLATE_MAKEFILE $NEW_MAKEFILE
+	cp $TEMPLATE_PHONEAPPS $NEW_PHONEAPPS
 
     if [ $FROM_TRAGET_FILES==0 ]; then
 
