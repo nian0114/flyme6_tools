@@ -72,7 +72,7 @@ function checkRecovery {
     if adb devices | grep -i "recovery" > /dev/null; then
         FROM_RECOVERY=1
     else
-        FROM_RECOVERY=0 
+        FROM_RECOVERY=0
     fi
 }
 
